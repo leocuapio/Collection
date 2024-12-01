@@ -126,45 +126,88 @@ export default function Home() {
   return (
     <>
       <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Toolbar
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Button
-            onClick={() => router.push('/')}
-            sx={{ textTransform: 'none', fontSize: '1.25rem', color: 'inherit' }}
+            onClick={() => router.push("/")}
+            sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
           >
-            BestProfessorAI
+            HobbyCollect
           </Button>
 
-          <Box style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+          {/* Flex container for navigation links, centered using margin */}
+          <Box
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
             <Box display="flex" gap="2rem">
-              <Link href="/features" variant="body1" color="textPrimary" sx={{ textDecoration: 'none' }}>
+              <SignedIn>
+                <Link
+                  href="/main"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none", fontSize: "1.2rem" }}
+                >
+                  Collections
+                </Link>
+              </SignedIn>
+              <Link
+                href="/features"
+                variant="body1"
+                color="textPrimary"
+                sx={{ textDecoration: "none", fontSize: "1.2rem" }}
+              >
                 Features
               </Link>
-              <Link href="/contact" variant="body1" color="textPrimary" sx={{ textDecoration: 'none' }}>
+              <Link
+                href="/contact"
+                variant="body1"
+                color="textPrimary"
+                sx={{ textDecoration: "none", fontSize: "1.2rem" }}
+              >
                 Contact
               </Link>
-              <Link href="/about" variant="body1" color="textPrimary" sx={{ textDecoration: 'none' }}>
+              <Link
+                href="/about"
+                variant="body1"
+                color="textPrimary"
+                sx={{ textDecoration: "none", fontSize: "1.2rem" }}
+              >
                 About
               </Link>
+
+              {/* Conditionally show Collections tab if signed in */}
             </Box>
           </Box>
 
+          {/* UserButton and Sign-In/Sign-Up buttons */}
           <Box display="flex" alignItems="center" gap="1rem">
             <SignedOut>
               <Button
                 variant="contained"
-                sx={{ backgroundColor: 'black', color: 'white' }}
+                sx={{ backgroundColor: "black", color: "white" }}
                 href="/sign-in"
               >
                 Login
               </Button>
               <Button
                 variant="contained"
-                sx={{ backgroundColor: 'black', color: 'white' }}
+                sx={{ backgroundColor: "black", color: "white" }}
                 href="/sign-up"
               >
                 Sign Up
               </Button>
             </SignedOut>
+
             <SignedIn>
               <UserButton />
             </SignedIn>

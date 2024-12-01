@@ -14,10 +14,13 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
+    "dns": "^0.2.2",
     "firebase": "^10.13.1",
-    "next": "14.2.7",
+    "next": "^14.2.18",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sneaks-api": "^1.2.3",
+    "stockx-data": "^1.0.3"
   },
   "devDependencies": {
     "eslint": "^8",
