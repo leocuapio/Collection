@@ -207,7 +207,7 @@ export default function Collections() {
           </Grid>
         </Grid>
       </Container>
-
+#
       <Box
         sx={{ backgroundColor: "#3C3C3C", color: "#fff", padding: "1rem 0" }}
       >
