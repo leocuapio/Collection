@@ -298,11 +298,11 @@ export default function Home() {
   </Typography>
   <Grid container spacing={4} justifyContent="center">
     <Grid item xs={12} sm={6} md={4}>
-      <Typography variant="h6">John's Sneaker Collection</Typography>
+      <Typography variant="h6">John&apos;s Sneaker Collection</Typography>
       <img src="/john.jpg" alt="Sneakers" style={{ width: "100%" , height: "100%"}} />
     </Grid>
     <Grid item xs={12} sm={6} md={4}>
-      <Typography variant="h6">Mary's Tech Collection</Typography>
+      <Typography variant="h6">Mary&apos;s Tech Collection</Typography>
       <img src="/mary.jpg" alt="Tech" style={{ width: "100%", height: "100%"}} />
     </Grid>
   </Grid>

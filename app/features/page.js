@@ -347,7 +347,7 @@ const featuresData = [
   {
     title: "Advanced Filtering",
     description:
-      "Filter your collection by brand, price, year, and more to find exactly what you’re looking for.",
+      "Filter your collection by brand, price, year, and more to find exactly what you're looking for.",
     image: "/filtering.jpg",
     icon: <FilterAltIcon fontSize="large" style={{ color: "#e5351a" }} />,
   },
