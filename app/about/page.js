@@ -156,7 +156,7 @@ export default function AboutUs() {
     textAlign="center"
     sx={{ maxWidth: "700px", margin: "0 auto", marginBottom: "3rem", color: "#555" }}
   >
-    At HobbyCollect, we're passionate about empowering collectors through innovation, community, and shared passion.
+    At HobbyCollect, we&apos;re passionate about empowering collectors through innovation, community, and shared passion.
   </Typography>
   <Grid container spacing={4} justifyContent="center">
     {/* Core Value Cards */}
