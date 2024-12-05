@@ -378,12 +378,13 @@ export default function Home() {
 
 <Box
   width="100vw"
-  height="70vh"
+  minWidth={1000}
+  height="80vh"
   display="flex"
   flexDirection="column"
   alignItems="center"
   gap={2}
-  padding={2}
+  padding={25}
 >
   {/* Center buttons */}
   <Stack direction="row" spacing={2} mb={2}>
