@@ -18,6 +18,10 @@ import {
   Toolbar,
   Link,
   IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
 } from '@mui/material';
 
 import { firestore } from '@/firebase';
@@ -30,7 +34,8 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
+import { useMediaQuery } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
 const style = {
   position: 'absolute',
@@ -57,6 +62,7 @@ export default function Home() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [itemPrice, setItemPrice] = useState('');
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -88,14 +94,14 @@ export default function Home() {
     setFilteredInventory(inventoryList);
   };
 
-  const addItem = async (item) => {
+  const addItem = async (item, price) => {
     const docRef = doc(collection(firestore, 'inventory'), item);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const { quantity } = docSnap.data();
-      await setDoc(docRef, { quantity: quantity + 1 });
+      const { quantity, price: existingPrice } = docSnap.data();
+      await setDoc(docRef, { quantity: quantity + 1, price: existingPrice || price });
     } else {
-      await setDoc(docRef, { quantity: 1 });
+      await setDoc(docRef, { quantity: 1, price: price });
     }
     await updateInventory();
   };
@@ -147,26 +153,56 @@ export default function Home() {
   const handleCloseRemoveModal = () => setOpenRemoveModal(false);
 
   if (loading) return <div>Loading...</div>;
+  const isMobile = useMediaQuery("(max-width: 600px)"); // Check if screen is mobile-sized
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Toggle drawer open/close on mobile
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
   return (
     <>
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+      <AppBar
+      position="fixed" // Fix the navbar to the top
+      style={{
+        backgroundColor: "white", // Set the background color to white
+        boxShadow: "0px 4px 2px -2px white", // Optional: Add shadow for visual separation
+      }}
+    >
+      <Toolbar
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          onClick={() => router.push("/")}
+          sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
         >
-          <Button
-            onClick={() => router.push("/")}
-            sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
-          >
-            <img src="/HobbyCollect.png" alt="Logo" style={{ height: "80px" }} />
-          </Button>
+          <img src="/HobbyCollect.png" alt="Logo" style={{ height: "80px" }} />
+        </Button>
 
-          {/* Flex container for navigation links, centered using margin */}
+        {/* Mobile Hamburger Menu Icon */}
+        {isMobile && (
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={toggleDrawer}
+            aria-label="menu"
+            sx={{
+              marginLeft: 'auto',
+              color: 'black', // Ensure icon is black (or a contrasting color)
+              display: 'block', // Ensure icon is visible and clickable
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        {/* Flex container for navigation links, centered on desktop */}
+        {!isMobile && (
           <Box
             style={{
               position: "absolute",
@@ -209,40 +245,138 @@ export default function Home() {
               >
                 About
               </Link>
-
-              {/* Conditionally show Collections tab if signed in */}
             </Box>
           </Box>
+        )}
 
-          {/* UserButton and Sign-In/Sign-Up buttons */}
-          <Box display="flex" alignItems="center" gap="1rem">
-            <SignedOut>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-in"
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-up"
-              >
-                Sign Up
-              </Button>
-            </SignedOut>
+        {/* UserButton and Sign-In/Sign-Up buttons */}
+        <Box display="flex" alignItems="center" gap="1rem">
+          <SignedOut>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-in"
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-up"
+            >
+              Sign Up
+            </Button>
+          </SignedOut>
 
+          {/* Hide UserButton on mobile */}
+          {!isMobile && (
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          )}
+        </Box>
+      </Toolbar>
+
+      {/* Drawer (Mobile Menu) */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer}
+          onKeyDown={toggleDrawer}
+        >
+          <List>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/collections"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Collections
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/features"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Features
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/contact"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Contact
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/about"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  About
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <SignedIn>
+              <ListItem button>
+                <ListItemText>
+                  <UserButton />
+                </ListItemText>
+              </ListItem>
+            </SignedIn>
+            <SignedOut>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-in"
+                  >
+                    Login
+                  </Button>
+                </ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-up"
+                  >
+                    Sign Up
+                  </Button>
+                </ListItemText>
+              </ListItem>
+            </SignedOut>
+          </List>
+        </Box>
+      </Drawer>
+    </AppBar>
 
 <Box
   width="100vw"
-  height="100vh"
+  height="70vh"
   display="flex"
   flexDirection="column"
   alignItems="center"
@@ -308,66 +442,77 @@ export default function Home() {
         </Typography>
       </Box>
       <Stack spacing={2} height="100%" overflow={'auto'}>
-        {filteredInventory.map(({ name, quantity }) => (
-          <Box
-            key={name}
-            width="100%"
-            minHeight="100px"
-            display={'flex'}
-            alignItems={'center'}
-            bgcolor={'#fff'}
-            paddingX={2}
-            borderRadius={1}
-            boxShadow={1}
-            justifyContent={'space-between'}
-          >
-            <Stack width="70%" direction="row" justifyContent="space-between">
-              <Typography variant={'h6'} color={'#333'}>
-                {name.charAt(0).toUpperCase() + name.slice(1)}
-              </Typography>
-              <Typography variant={'h6'} color={'#333'}>
-                {quantity} Item{quantity > 1 ? 's' : ''}
-              </Typography>
-            </Stack>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: '#2B2B2B', color: 'white' }}
-              onClick={() => removeItem(name)}
-            >
-              Remove
-            </Button>
-          </Box>
-        ))}
+  {filteredInventory.map(({ name, quantity, price }) => (
+    <Box
+      key={name}
+      width="100%"
+      minHeight="100px"
+      display={'flex'}
+      alignItems={'center'}
+      bgcolor={'#fff'}
+      paddingX={2}
+      borderRadius={1}
+      boxShadow={1}
+      justifyContent={'space-between'}
+    >
+      <Stack width="70%" direction="row" justifyContent="space-between">
+        <Typography variant={'h6'} color={'#333'}>
+          {name.charAt(0).toUpperCase() + name.slice(1)}
+        </Typography>
+        <Typography variant={'h6'} color={'#333'}>
+          {quantity} Item{quantity > 1 ? 's' : ''}
+        </Typography>
+        <Typography variant={'h6'} color={'#333'}>
+          ${price}
+        </Typography>
       </Stack>
+      <Button
+        variant="contained"
+        sx={{ backgroundColor: '#2B2B2B', color: 'white' }}
+        onClick={() => removeItem(name)}
+      >
+        Remove
+      </Button>
+    </Box>
+  ))}
+</Stack>
     </Box>
   </Stack>
 </Box>
 
       {/* Add Item Modal */}
       <Modal open={open} onClose={handleClose} aria-labelledby="add-item-title">
-        <Box sx={style}>
-          <Typography id="add-item-title" variant="h6" component="h2">
-            Add Item
-          </Typography>
-          <TextField
-            label="Item Name"
-            variant="outlined"
-            fullWidth
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-          />
-          <Button
-            onClick={() => {
-              addItem(itemName);
-              handleClose();
-            }}
-            sx={{ backgroundColor: '#2B2B2B', color: 'white' }}
-            variant="contained"
-          >
-            Add
-          </Button>
-        </Box>
-      </Modal>
+  <Box sx={style}>
+    <Typography id="add-item-title" variant="h6" component="h2">
+      Add Item
+    </Typography>
+    <TextField
+      label="Item Name"
+      variant="outlined"
+      fullWidth
+      value={itemName}
+      onChange={(e) => setItemName(e.target.value)}
+    />
+    <TextField
+      label="Price"
+      variant="outlined"
+      fullWidth
+      value={itemPrice}
+      onChange={(e) => setItemPrice(e.target.value)}
+      type="number" // Ensure it's a numeric value
+    />
+    <Button
+      onClick={() => {
+        addItem(itemName, itemPrice);
+        handleClose();
+      }}
+      sx={{ backgroundColor: '#2B2B2B', color: 'white' }}
+      variant="contained"
+    >
+      Add
+    </Button>
+  </Box>
+</Modal>
 
       {/* Remove Item Modal */}
       <Modal open={openRemoveModal} onClose={handleCloseRemoveModal} aria-labelledby="remove-item-title">

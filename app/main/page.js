@@ -19,6 +19,8 @@ import {
   Link,
   IconButton,
 } from '@mui/material';
+import { useMediaQuery } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
 import { firestore } from '@/firebase';
 import { collection, doc, getDocs, query, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
@@ -122,26 +124,56 @@ export default function Home() {
   const handleCloseRemoveModal = () => setOpenRemoveModal(false);
 
   if (loading) return <div>Loading...</div>;
+  const isMobile = useMediaQuery("(max-width: 600px)"); // Check if screen is mobile-sized
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Toggle drawer open/close on mobile
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
   return (
     <>
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+      <AppBar
+      position="fixed" // Fix the navbar to the top
+      style={{
+        backgroundColor: "white", // Set the background color to white
+        boxShadow: "0px 4px 2px -2px white", // Optional: Add shadow for visual separation
+      }}
+    >
+      <Toolbar
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          onClick={() => router.push("/")}
+          sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
         >
-          <Button
-            onClick={() => router.push("/")}
-            sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
-          >
-            HobbyCollect
-          </Button>
+          <img src="/HobbyCollect.png" alt="Logo" style={{ height: "80px" }} />
+        </Button>
 
-          {/* Flex container for navigation links, centered using margin */}
+        {/* Mobile Hamburger Menu Icon */}
+        {isMobile && (
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={toggleDrawer}
+            aria-label="menu"
+            sx={{
+              marginLeft: 'auto',
+              color: 'black', // Ensure icon is black (or a contrasting color)
+              display: 'block', // Ensure icon is visible and clickable
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        {/* Flex container for navigation links, centered on desktop */}
+        {!isMobile && (
           <Box
             style={{
               position: "absolute",
@@ -152,7 +184,7 @@ export default function Home() {
             <Box display="flex" gap="2rem">
               <SignedIn>
                 <Link
-                  href="/main"
+                  href="/collections"
                   variant="body1"
                   color="textPrimary"
                   sx={{ textDecoration: "none", fontSize: "1.2rem" }}
@@ -184,36 +216,134 @@ export default function Home() {
               >
                 About
               </Link>
-
-              {/* Conditionally show Collections tab if signed in */}
             </Box>
           </Box>
+        )}
 
-          {/* UserButton and Sign-In/Sign-Up buttons */}
-          <Box display="flex" alignItems="center" gap="1rem">
-            <SignedOut>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-in"
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-up"
-              >
-                Sign Up
-              </Button>
-            </SignedOut>
+        {/* UserButton and Sign-In/Sign-Up buttons */}
+        <Box display="flex" alignItems="center" gap="1rem">
+          <SignedOut>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-in"
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-up"
+            >
+              Sign Up
+            </Button>
+          </SignedOut>
 
+          {/* Hide UserButton on mobile */}
+          {!isMobile && (
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          )}
+        </Box>
+      </Toolbar>
+
+      {/* Drawer (Mobile Menu) */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer}
+          onKeyDown={toggleDrawer}
+        >
+          <List>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/collections"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Collections
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/features"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Features
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/contact"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Contact
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/about"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  About
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <SignedIn>
+              <ListItem button>
+                <ListItemText>
+                  <UserButton />
+                </ListItemText>
+              </ListItem>
+            </SignedIn>
+            <SignedOut>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-in"
+                  >
+                    Login
+                  </Button>
+                </ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-up"
+                  >
+                    Sign Up
+                  </Button>
+                </ListItemText>
+              </ListItem>
+            </SignedOut>
+          </List>
+        </Box>
+      </Drawer>
+    </AppBar>
 
       <Box
         width="100vw"

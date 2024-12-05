@@ -14,6 +14,10 @@ import {
   Avatar,
   IconButton,
   TextField,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -24,7 +28,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import { useRouter } from "next/navigation";
-
+import { useMediaQuery } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 export default function AboutUs() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -39,30 +44,57 @@ export default function AboutUs() {
     console.log("Subscribed with email:", email);
     setEmail("");
   };
+  const isMobile = useMediaQuery("(max-width: 600px)"); // Check if screen is mobile-sized
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Toggle drawer open/close on mobile
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
   return (
     <div>
       {/* Header */}
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+      <AppBar
+      position="fixed" // Fix the navbar to the top
+      style={{
+        backgroundColor: "white", // Set the background color to white
+        boxShadow: "0px 4px 2px -2px white", // Optional: Add shadow for visual separation
+      }}
+    >
+      <Toolbar
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          onClick={() => router.push("/")}
+          sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
         >
-          <Button
-            onClick={() => router.push("/")}
-            sx={{ textTransform: "none", fontSize: "1.5rem", color: "inherit" }}
-          >
-            <img
-              src="/HobbyCollect.png"
-              alt="Logo"
-              style={{ height: "80px" }}
-            />
-          </Button>
+          <img src="/HobbyCollect.png" alt="Logo" style={{ height: "80px" }} />
+        </Button>
 
-          {/* Flex container for navigation links, centered using margin */}
+        {/* Mobile Hamburger Menu Icon */}
+        {isMobile && (
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={toggleDrawer}
+            aria-label="menu"
+            sx={{
+              marginLeft: 'auto',
+              color: 'black', // Ensure icon is black (or a contrasting color)
+              display: 'block', // Ensure icon is visible and clickable
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        {/* Flex container for navigation links, centered on desktop */}
+        {!isMobile && (
           <Box
             style={{
               position: "absolute",
@@ -105,41 +137,139 @@ export default function AboutUs() {
               >
                 About
               </Link>
-
-              {/* Conditionally show Collections tab if signed in */}
             </Box>
           </Box>
+        )}
 
-          {/* UserButton and Sign-In/Sign-Up buttons */}
-          <Box display="flex" alignItems="center" gap="1rem">
-            <SignedOut>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-in"
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "black", color: "white" }}
-                href="/sign-up"
-              >
-                Sign Up
-              </Button>
-            </SignedOut>
+        {/* UserButton and Sign-In/Sign-Up buttons */}
+        <Box display="flex" alignItems="center" gap="1rem">
+          <SignedOut>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-in"
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+              href="/sign-up"
+            >
+              Sign Up
+            </Button>
+          </SignedOut>
 
+          {/* Hide UserButton on mobile */}
+          {!isMobile && (
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          )}
+        </Box>
+      </Toolbar>
+
+      {/* Drawer (Mobile Menu) */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer}
+          onKeyDown={toggleDrawer}
+        >
+          <List>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/collections"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Collections
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/features"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Features
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/contact"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  Contact
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem button>
+              <ListItemText>
+                <Link
+                  href="/about"
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ textDecoration: "none" }}
+                >
+                  About
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <SignedIn>
+              <ListItem button>
+                <ListItemText>
+                  <UserButton />
+                </ListItemText>
+              </ListItem>
+            </SignedIn>
+            <SignedOut>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-in"
+                  >
+                    Login
+                  </Button>
+                </ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemText>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black", color: "white", borderRadius: "20px" }}
+                    href="/sign-up"
+                  >
+                    Sign Up
+                  </Button>
+                </ListItemText>
+              </ListItem>
+            </SignedOut>
+          </List>
+        </Box>
+      </Drawer>
+    </AppBar>
       {/* Hero Section */}
 
       {/* Our Values Section */}
      {/* Core Values Section */}
-<Container sx={{ padding: "4rem 0" }}>
+     <Container sx={{ marginTop: "6rem", padding: "4rem 0" }}>
   <Typography
     textAlign="center"
     variant="h2"
@@ -188,6 +318,7 @@ export default function AboutUs() {
             padding: "2rem",
             textAlign: "center",
             border: "1px solid #e0e0e0",
+            borderRadius: "10px",
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
             transition: "transform 0.3s, box-shadow 0.3s",
             "&:hover": {
