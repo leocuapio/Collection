@@ -434,7 +434,7 @@ export default function Home() {
     </Grid>
     <Grid item xs={12} sm={6} md={4}>
       <Typography variant="h6">Mary&apos;s Tech Collection</Typography>
-      <img src="/mary.jpg" alt="Tech" style={{ width: "100%", height: "100%"}} />
+      <img src="/Mary.jpg" alt="Tech" style={{ width: "100%", height: "100%"}} />
     </Grid>
   </Grid>
 </Box>
