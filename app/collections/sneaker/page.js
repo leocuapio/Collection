@@ -54,6 +54,13 @@ const style = {
 };
 
 export default function Home() {
+  const isMobile = useMediaQuery("(max-width: 600px)"); // Check if screen is mobile-sized
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Toggle drawer open/close on mobile
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
   const [open, setOpen] = useState(false);
@@ -154,13 +161,7 @@ export default function Home() {
   const handleCloseRemoveModal = () => setOpenRemoveModal(false);
 
   if (loading) return <div>Loading...</div>;
-  const isMobile = useMediaQuery("(max-width: 600px)"); // Check if screen is mobile-sized
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Toggle drawer open/close on mobile
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
+  
   return (
     <>
       <AppBar
