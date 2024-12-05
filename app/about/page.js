@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
 import {
   Container,
   Typography,
@@ -28,7 +29,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import { useRouter } from "next/navigation";
-import { useMediaQuery } from "@mui/material";
+
 import MenuIcon from '@mui/icons-material/Menu';
 export default function AboutUs() {
   const router = useRouter();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useMediaQuery } from "@mui/material";
 import {
   Box,
   Stack,
@@ -34,7 +35,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { useMediaQuery } from "@mui/material";
+
 import MenuIcon from '@mui/icons-material/Menu';
 
 const style = {

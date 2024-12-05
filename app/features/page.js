@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import {
   Container,
@@ -34,7 +35,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import GroupIcon from "@mui/icons-material/Group";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import CollectionsIcon from "@mui/icons-material/Collections";
-import { useMediaQuery } from "@mui/material";
+
 import MenuIcon from '@mui/icons-material/Menu';
 export default function Features() {
   const router = useRouter();

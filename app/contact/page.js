@@ -1,14 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/navigation';
+
 import { Container, Typography, Button, Box, AppBar, Toolbar, Link, IconButton, TextField, Grid, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { useMediaQuery } from "@mui/material";
+
 import MenuIcon from '@mui/icons-material/Menu';
 export default function Docs() {
   const [email, setEmail] = useState('');
